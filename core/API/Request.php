@@ -145,10 +145,11 @@ class Request
      *
      * @param $module
      * @param $action
+     * @param string $context
      * @return array( $module, $action )
      * @ignore
      */
-    public static function getRenamedModuleAndAction($module, $action)
+    public static function getRenamedModuleAndAction($module, $action, $context = 'api')
     {
         /**
          * This event is posted in the Request dispatcher and can be used
@@ -157,8 +158,9 @@ class Request
          *
          * @param $module string
          * @param $action string
+         * @param $context string
          */
-        Piwik::postEvent('Request.getRenamedModuleAndAction', array(&$module, &$action));
+        Piwik::postEvent('Request.getRenamedModuleAndAction', array(&$module, &$action, $context));
 
         return array($module, $action);
     }
@@ -232,7 +234,7 @@ class Request
 
             list($module, $method) = $this->extractModuleAndMethod($moduleMethod);
             list($module, $method) = self::getRenamedModuleAndAction($module, $method);
-            
+
             PluginManager::getInstance()->checkIsPluginActivated($module);
 
             $apiClassName = self::getClassNameAPI($module);
@@ -513,7 +515,8 @@ class Request
         if (empty($this->request['apiAction'])) {
             $this->request['apiAction'] = null;
         }
-        list($this->request['apiModule'], $this->request['apiAction']) = $this->getRenamedModuleAndAction($this->request['apiModule'], $this->request['apiAction']);
+        list($this->request['apiModule'], $this->request['apiAction']) =
+            $this->getRenamedModuleAndAction($this->request['apiModule'], $this->request['apiAction'], 'processedreport');
     }
 
     /**

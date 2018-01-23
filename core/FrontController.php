@@ -417,7 +417,7 @@ class FrontController extends Singleton
             throw new Exception("Invalid module name '$module'");
         }
 
-        list($module, $action) = Request::getRenamedModuleAndAction($module, $action);
+        list($module, $action) = Request::getRenamedModuleAndAction($module, $action, $context = 'controller');
 
         if (!\Piwik\Plugin\Manager::getInstance()->isPluginActivated($module)) {
             throw new PluginDeactivatedException($module);
